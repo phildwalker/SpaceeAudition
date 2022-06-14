@@ -9,7 +9,7 @@ navbar:
     - text: "R: Precision-Recall"
       icon: fa-hand-spock
       href: eda.html
-    - text: "SQL: "  
+    - text: "SQL: Sample User Data"  
       icon: fa-seedling
       href: SQL_ex.html
 

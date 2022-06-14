@@ -379,7 +379,7 @@ div.tocify {
   <a href="SQL_ex.html">
     <span class="fa fa-seedling"></span>
      
-    SQL: 
+    SQL: Sample User Data
   </a>
 </li>
       </ul>
@@ -416,6 +416,105 @@ selects their full name from the user table as a single new column
 *Bonus for adding in a new column for each user and flagging their 3rd
 longest duration with 1, otherwise put 0 (put 0 if they have fewer than
 3 sessions)</p>
+</div>
+<div id="build-tables" class="section level1">
+<h1>Build Tables</h1>
+<p>To help with future potential troubleshooting, I have created small
+and simple tables to allow us to run the queries against.</p>
+<div id="building-user-table" class="section level2">
+<h2>Building User Table</h2>
+<pre class="r"><code>users &lt;- data.frame(
+  id = seq(1:10), 
+  firstName= stringi::stri_rand_strings(10, 5, &#39;[a-z]&#39;), 
+  lastName = stringi::stri_rand_strings(10, 2, &#39;[A-Z]&#39;)
+) 
+
+save(users, file = here::here(&quot;data&quot;, &quot;users.rds&quot;))</code></pre>
+</div>
+<div id="building-sessions-table" class="section level2">
+<h2>Building Sessions Table</h2>
+<pre class="r"><code>sampleUser &lt;- sample(users$id, 100, replace= T) 
+sampleDur &lt;- sample(10:50, 100, replace=TRUE)
+
+sessions &lt;- data.frame(
+  id = seq(1:100),
+  userId = sampleUser,
+  duration = sampleDur
+)
+  
+save(sessions, file = here::here(&quot;data&quot;, &quot;sessions.rds&quot;))</code></pre>
+</div>
+<div id="building-transactions-table" class="section level2">
+<h2>Building Transactions Table</h2>
+<pre class="r"><code>records &lt;- 200
+
+sampleUserTXN &lt;- sample(users$id, records, replace= T) 
+sampleProd &lt;- sample(111:120, records, replace=TRUE)
+sampleOrigDT &lt;- sample(1900:2020, records, replace=TRUE)
+sampleQTY &lt;- sample(1:10, records, replace=TRUE)
+
+transactions &lt;-  data.frame(
+  id = seq(1:records),
+  userId = sampleUserTXN,
+  productId = sampleProd,
+  originDate = sampleOrigDT,
+  description = &quot;&quot;,
+  qty = sampleQTY
+)
+
+save(transactions, file = here::here(&quot;data&quot;, &quot;transactions.rds&quot;))</code></pre>
+</div>
+<div id="load-tables-that-would-be-in-db" class="section level2">
+<h2>Load Tables (that would be in DB)</h2>
+<pre class="r"><code>load(file = here::here(&quot;data&quot;, &quot;users.rds&quot;))
+load(file = here::here(&quot;data&quot;, &quot;sessions.rds&quot;))
+load(file = here::here(&quot;data&quot;, &quot;transactions.rds&quot;))</code></pre>
+</div>
+</div>
+<div id="top-avg-durations-and-new-name-column" class="section level1">
+<h1>Top Avg Durations and New Name Column</h1>
+<p>I just created sample tables with 10 different users. If the tables
+were larger it would have pulled more records (or we could expand with
+further by changing the where statement to be ‘&lt;= 50’)</p>
+<p>Used a CTE to create a summary table, which I then used to query
+against.</p>
+<pre class="r"><code>sqldf(&quot;
+with avgDur (userID, AvgDur, ranking) as (
+  select userId, avg(duration) as AvgDur, RANK() OVER (ORDER BY avg(duration) DESC) as ranking
+  from sessions
+  group by UserId
+  order by 2 desc)
+
+select firstName ||&#39; &#39;|| lastName as Combined_name, AvgDur, ranking
+from avgDur avg left join 
+users u on u.id = avg.userID
+where ranking &lt;= 5
+
+&quot;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Combined_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["AvgDur"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["ranking"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"gcehr JR","2":"35.00000","3":"1"},{"1":"spgjj LP","2":"35.00000","3":"1"},{"1":"ckdws FS","2":"31.66667","3":"3"},{"1":"umcss DJ","2":"31.23077","3":"4"},{"1":"tamyu VI","2":"31.00000","3":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="flag-the-3rd-longer-duration-per-user" class="section level1">
+<h1>Flag the 3rd longer duration per user</h1>
+<p>Using a windowing function to rank the durations by userid.</p>
+<p>Showing below an example of userID 2</p>
+<pre class="r"><code>sqldf(&quot;
+with rankDur (userID, duration, ranking) as (
+  select userId, duration, DENSE_RANK() OVER(PARTITION BY userId ORDER BY duration DESC) as ranking
+  from sessions)
+      
+select *, case when ranking = 3 then 1 else 0 end as FlagThird
+from rankDur
+where userID = 2
+&quot;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["userID"],"name":[1],"type":["int"],"align":["right"]},{"label":["duration"],"name":[2],"type":["int"],"align":["right"]},{"label":["ranking"],"name":[3],"type":["int"],"align":["right"]},{"label":["FlagThird"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"2","2":"48","3":"1","4":"0"},{"1":"2","2":"42","3":"2","4":"0"},{"1":"2","2":"40","3":"3","4":"1"},{"1":"2","2":"37","3":"4","4":"0"},{"1":"2","2":"21","3":"5","4":"0"},{"1":"2","2":"19","3":"6","4":"0"},{"1":"2","2":"17","3":"7","4":"0"},{"1":"2","2":"15","3":"8","4":"0"},{"1":"2","2":"12","3":"9","4":"0"},{"1":"2","2":"12","3":"9","4":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 
 &nbsp;

@@ -24,27 +24,115 @@ knitr::opts_chunk$set(echo = T, message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(fig.align = 'center')
 
 library(tidyverse)
-library(patchwork)
-# library(pdwtheme)
-library(gt)
-library(infer)
+library(sqldf)
 # To Turn off Scientific Notation Use this.
 options(scipen = 999)
+```
 
-source("./src/spacee_theme.R")
+# Build Tables
+To help with future potential troubleshooting, I have created small and simple tables to allow us to run the queries against.
 
-# theme_set(theme_minimal())
+## Building User Table
+```{r, eval=F}
+
+users <- data.frame(
+  id = seq(1:10), 
+  firstName= stringi::stri_rand_strings(10, 5, '[a-z]'), 
+  lastName = stringi::stri_rand_strings(10, 2, '[A-Z]')
+) 
+
+save(users, file = here::here("data", "users.rds"))
+```
 
 
+## Building Sessions Table
+```{r, eval=F}
+sampleUser <- sample(users$id, 100, replace= T) 
+sampleDur <- sample(10:50, 100, replace=TRUE)
 
+sessions <- data.frame(
+  id = seq(1:100),
+  userId = sampleUser,
+  duration = sampleDur
+)
+  
+save(sessions, file = here::here("data", "sessions.rds"))
 ```
 
 
 
+## Building Transactions Table
+```{r, eval=F}
+records <- 200
+
+sampleUserTXN <- sample(users$id, records, replace= T) 
+sampleProd <- sample(111:120, records, replace=TRUE)
+sampleOrigDT <- sample(1900:2020, records, replace=TRUE)
+sampleQTY <- sample(1:10, records, replace=TRUE)
+
+transactions <-  data.frame(
+  id = seq(1:records),
+  userId = sampleUserTXN,
+  productId = sampleProd,
+  originDate = sampleOrigDT,
+  description = "",
+  qty = sampleQTY
+)
+
+save(transactions, file = here::here("data", "transactions.rds"))
+```
 
 
+## Load Tables (that would be in DB)
+```{r}
+load(file = here::here("data", "users.rds"))
+load(file = here::here("data", "sessions.rds"))
+load(file = here::here("data", "transactions.rds"))
+```
+
+# Top Avg Durations and New Name Column
+
+I just created sample tables with 10 different users. If the tables were larger it would have pulled more records (or we could expand with further by changing the where statement to be '<= 50')
+
+Used a CTE to create a summary table, which I then used to query against.
+
+```{r}
+
+sqldf("
+with avgDur (userID, AvgDur, ranking) as (
+  select userId, avg(duration) as AvgDur, RANK() OVER (ORDER BY avg(duration) DESC) as ranking
+  from sessions
+  group by UserId
+  order by 2 desc)
+
+select firstName ||' '|| lastName as Combined_name, AvgDur, ranking
+from avgDur avg left join 
+users u on u.id = avg.userID
+where ranking <= 5
+
+")
 
 
+```
 
+# Flag the 3rd longer duration per user
+
+Using a windowing function to rank the durations by userid.
+
+Showing below an example of userID 2
+```{r}
+
+sqldf("
+with rankDur (userID, duration, ranking) as (
+  select userId, duration, DENSE_RANK() OVER(PARTITION BY userId ORDER BY duration DESC) as ranking
+  from sessions)
+      
+select *, case when ranking = 3 then 1 else 0 end as FlagThird
+from rankDur
+where userID = 2
+")
+
+
+```
 
 
