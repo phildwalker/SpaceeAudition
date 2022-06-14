@@ -44,23 +44,27 @@
 
 <style>
 #TOC {
-  background: url("https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg");
+  background: "logo.png";
   background-size: 45%;
   padding-top:50px !important;
   background-repeat: no-repeat;
   background-position: 50% 5px;
 }
 
+
+
 </style>
 
 <!--
+background: url("https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg");
+
 Background-size: contain was filling all the space, 95% gives it a buffer.
 You can remove the margin-top as the background-position takes care of it instead: 
 the 50% centers the image left/right and 
 the 10px assigns its vertical position 15px down from the top.
 -->
 
-<link rel="shortcut icon" href= url("https://uploads-ssl.webflow.com/624c5b50813cc7cee01b3338/624c6c87a41f5852505fd7c8_Spacee_E_BambooHR.png")>
+<link rel="shortcut icon" href= logo.png>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
 
@@ -359,14 +363,14 @@ div.tocify {
       <ul class="nav navbar-nav">
         <li>
   <a href="analysis.html">
-    <span class="fa fa-book-open-cover"></span>
+    <span class="fa fa-paper-plane"></span>
      
     R: Top 50
   </a>
 </li>
 <li>
   <a href="eda.html">
-    <span class="fa fa-face-thinking&quot;"></span>
+    <span class="fa fa-hand-spock"></span>
      
     R: Precision-Recall
   </a>
@@ -404,23 +408,14 @@ div.tocify {
 </div>
 
 
-<div id="goal" class="section level1">
-<h1>Goal</h1>
-<p>This section is meant to help show my general process around:</p>
-<ul>
-<li>ingesting the dataset<br />
-</li>
-<li>exploring the results<br />
-</li>
-<li>developing the cleaned views</li>
-</ul>
-<p>I am intentionally not spending a ton of time working to clean up the
-visuals or extensively documenting the results, but I have enable the
-“show code” functionality as part of the yaml header for this rmd file
-(eda.Rmd).</p>
-<p>If desired the entirity of the website can be found on github [<a
-href="https://github.com/phildwalker/looma_audition"
-class="uri">https://github.com/phildwalker/looma_audition</a>]</p>
+<div id="prompt" class="section level1">
+<h1>Prompt</h1>
+<p>Each user can have multiple sessions. Write a SQL query that: -
+selects the ‘userIds’ with the top 50 average session durations -
+selects their full name from the user table as a single new column
+*Bonus for adding in a new column for each user and flagging their 3rd
+longest duration with 1, otherwise put 0 (put 0 if they have fewer than
+3 sessions)</p>
 </div>
 
 &nbsp;

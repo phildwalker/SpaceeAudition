@@ -10,17 +10,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Goal
+# Prompt
 
-This section is meant to help show my general process around:
-
-* ingesting the dataset  
-* exploring the results  
-* developing the cleaned views  
-
-I am intentionally not spending a ton of time working to clean up the visuals or extensively documenting the results, but I have enable the "show code" functionality as part of the yaml header for this rmd file (eda.Rmd). 
-
-If desired the entirity of the website can be found on github [https://github.com/phildwalker/looma_audition]
+Write the code to calculate and plot the Precision-Recall curve for any existing ML model you like. Could be a predictor, classifier, or detector. Use any simple ground truth dataset you like. For example, if you use an object classifier or detector, it could be of dogs and cats, or bicycles and cars, or anything like that. However, the dataset choice is yours. Turn in the code sample, GT dataset, and PR curve plot. 
 
 
 

@@ -38,29 +38,41 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.23/datatables.js"></script>
+<link href="site_libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 &nbsp;
 
 <style>
 #TOC {
-  background: url("https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg");
+  background: "logo.png";
   background-size: 45%;
   padding-top:50px !important;
   background-repeat: no-repeat;
   background-position: 50% 5px;
 }
 
+
+
 </style>
 
 <!--
+background: url("https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg");
+
 Background-size: contain was filling all the space, 95% gives it a buffer.
 You can remove the margin-top as the background-position takes care of it instead: 
 the 50% centers the image left/right and 
 the 10px assigns its vertical position 15px down from the top.
 -->
 
-<link rel="shortcut icon" href= url("https://uploads-ssl.webflow.com/624c5b50813cc7cee01b3338/624c6c87a41f5852505fd7c8_Spacee_E_BambooHR.png")>
+<link rel="shortcut icon" href= logo.png>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
 
@@ -359,14 +371,14 @@ div.tocify {
       <ul class="nav navbar-nav">
         <li>
   <a href="analysis.html">
-    <span class="fa fa-book-open-cover"></span>
+    <span class="fa fa-paper-plane"></span>
      
     R: Top 50
   </a>
 </li>
 <li>
   <a href="eda.html">
-    <span class="fa fa-face-thinking&quot;"></span>
+    <span class="fa fa-hand-spock"></span>
      
     R: Precision-Recall
   </a>
@@ -410,22 +422,21 @@ div.tocify {
 <div id="prompt" class="section level2">
 <h2>Prompt</h2>
 <p><strong>Prompt:</strong></p>
-<p>Imagine we ran an experiment to test the impact a Loop™ campaign has
-on sales. The experiment involved 42 stores in 3 groups:</p>
+<p>Perform the following with the attached “top50.csv” file:</p>
 <ul>
-<li><em>“Program test”</em> These stores had the full Loop™ campaign as
-it would normally run, with a display of featured products and a tablet
-showing 2-3 films in a looping playlist<br />
+<li>Load the dataset and perform EDA and determine if any cleanup (data
+conversions, name changes, scaling, imputation of missing values, etc.)
+is needed.<br />
 </li>
-<li><em>“Film control”</em> These stores had the full program but with
-the film from one brand (“Brewery A”) left out.<br />
+<li>Determine if any correlation exists between features.<br />
 </li>
-<li><em>“Baseline control”</em> These stores did not have Loop™
-campaigns or featured products on display.</li>
+<li>Visualize and examine the distribution of popularity scores and show
+if any outliers or skewing exists.<br />
+</li>
+<li>Perform any transformations as needed and create a model to predict
+the popularity of a song, while avoiding overfitting and showing
+relevant scores.</li>
 </ul>
-<p>Assume you need to provide an analysis of this experiment under time
-constraints (in reality, we expect you to devote 2-4 hours to this
-audition project).</p>
 </div>
 <div id="goal" class="section level2">
 <h2>Goal</h2>
@@ -469,18 +480,7 @@ on average as compared to the baseline</li>
 </ol>
 <p><strong>Potential Investigation Next Steps:</strong></p>
 <ul>
-<li>It would be interesting in future iterations, to get a more detailed
-view of what is being purchased. This could potentially help to
-understand where the campaign leads to the purchase of (perceived)
-similar products.</li>
-<li>Depending on who the customer is, we might want to calculate the ROI
-of the Loop™ campaign</li>
-<li>It would be interesting figure out the “0’s” (ie getting total
-people who went to the store but didn’t buy that beer, helping to
-understand if they bought different beer/wine).</li>
-<li>With the variations in sales amount vs dollars it would be
-interesting to get increase visibility to other potential confounding
-affects (ie sales).</li>
+<li>It would be interesting in future iterations,</li>
 </ul>
 </div>
 <div id="assumptions" class="section level2">
@@ -489,29 +489,72 @@ affects (ie sales).</li>
 take a different shape as familiarity with the data source increase/
 relationship with the customer develops)</em></p>
 <p>With this analysis we are assuming that:</p>
+</div>
+</div>
+</div>
+<div id="overview-of-data" class="section level1 tabset tabset-pills">
+<h1 class="tabset tabset-pills">Overview of Data</h1>
+<p>Load the dataset and perform EDA and determine if any cleanup (data
+conversions, name changes, scaling, imputation of missing values, etc.)
+is needed.</p>
+<div id="load-data" class="section level2">
+<h2>Load Data</h2>
+</div>
+<div id="review-ggpairs-for-variables" class="section level2">
+<h2>Review ggpairs for variables</h2>
+<p>Looks like upon initial review that there are decent correlations
+between:</p>
 <ul>
-<li>The type/size of stores are similar for the across the 3 groups. (ie
-if the groups were stratified by size then the resulting sales could be
-more a factor of store size and less the campaign)</li>
-<li>The store regions are similar enough (ie the campaign might not be
-relevant to certain communities or the communities could be in different
-SES leading to different reactions to the pandemic).</li>
-<li>The potential time of year impact is captured similarly across the 3
-groups (ie if beer/wine is most popular during Thanksgiving/ 4th of
-July, that the store groups capture that time period similarly across
-groups).</li>
-<li>The beers made available by Brewery A were consistent across stores,
-and were placed in a relatively similar proximity to the Loop™/ were
-accessible to the customer.</li>
+<li>BPM and Speechiness<br />
+</li>
+<li>Energy and Loudness<br />
+</li>
+<li>Energy and Valence<br />
+</li>
+<li>Energy and Acousticness<br />
+</li>
+<li>Popularity and Valence</li>
 </ul>
+<p>I am not sure what “Valence” means, so I would probably want to look
+this up to understand it a little more.</p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="review-genre" class="section level2">
+<h2>Review Genre</h2>
+<p>Looked to see if there are general groups the different genres fall
+within.</p>
+<ul>
+<li>There are many pop songs as well as multiple pop categories. It’s
+possible that the category of a song could impact it’s popularity, but
+that analysis is likely one for a larger dataset.</li>
+</ul>
+<div id="htmlwidget-77b855b4d89712562085" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-77b855b4d89712562085">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["hip hop","hip hop","Other","Other","Other","Other","Other","Other","Other","pop","pop","pop","pop","pop","pop","pop","rap","rap","rap","reggaeton","reggaeton"],["atl hip hop","canadian hip hop","big room","boy band","escape room","r&amp;b en espanol","brostep","edm","latin","australian pop","pop house","canadian pop","electropop","panamanian pop","pop","dance pop","trap music","country rap","dfw rap","reggaeton","reggaeton flow"],[1,3,1,1,1,1,2,3,5,1,1,2,2,2,7,8,1,2,2,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>GenreGroup<\/th>\n      <th>Genre<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
+<div id="colinearity-review" class="section level1">
+<h1>Colinearity Review</h1>
+<p>Determine if any correlation exists between features.</p>
 </div>
-<div id="summary-of-impact" class="section level1 tabset tabset-pills">
-<h1 class="tabset tabset-pills">Summary of Impact</h1>
-<div id="avg-velocity-amount-sales" class="section level2">
-<h2>Avg Velocity Amount (Sales $)</h2>
+<div id="popularity-scores" class="section level1">
+<h1>Popularity Scores</h1>
+<p>Visualize and examine the distribution of popularity scores and show
+if any outliers or skewing exists.</p>
+<p>Decided to overlay a violin and a box plot.</p>
+<ul>
+<li>It looks like the popularity scores range from 70 to 95, with the
+majority of the scores falling more within the 85 to 92 range.<br />
+</li>
+<li>Accordingly the two lowest scores of 70 and 78 fall out of the lower
+quartile, and could be considered outliers in this dataset.</li>
+</ul>
+<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
+<div id="predict-popularity" class="section level1">
+<h1>Predict Popularity</h1>
+<p>Perform any transformations as needed and create a model to predict
+the popularity of a song, while avoiding overfitting and showing
+relevant scores.</p>
 </div>
 
 &nbsp;

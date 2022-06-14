@@ -24,8 +24,7 @@ options(scipen = 999)
 
 source("./src/spacee_theme.R")
 
-dat <- read_csv(here::here("inputs", "top50.csv"))
-
+theme_set(theme_bw())
 ```
 
 
@@ -37,13 +36,12 @@ dat <- read_csv(here::here("inputs", "top50.csv"))
 
 __Prompt:__
 
-Imagine we ran an experiment to test the impact a Loop™ campaign has on sales. The experiment involved 42 stores in 3 groups:  
+Perform the following with the attached “top50.csv” file:   
 
-* _“Program test”_  These stores had the full Loop™ campaign as it would normally run, with a display of featured products and a tablet showing 2-3 films in a looping playlist  
-* _“Film control”_  These stores had the full program but with the film from one brand (“Brewery A”) left out.   
-* _“Baseline control”_  These stores did not have Loop™ campaigns or featured products on display.  
-
-Assume you need to provide an analysis of this experiment under time constraints (in reality, we expect you to devote 2-4 hours to this audition project).
+* Load the dataset and perform EDA and determine if any cleanup (data conversions, name changes, scaling, imputation of missing values, etc.) is needed.  
+* Determine if any correlation exists between features.  
+* Visualize and examine the distribution of popularity scores and show if any outliers or skewing exists.  
+* Perform any transformations as needed and create a model to predict the popularity of a song, while avoiding overfitting and showing relevant scores.
 
 ## Goal  
 
@@ -73,11 +71,7 @@ From the analysis we find that:
 
 __Potential Investigation Next Steps:__ 
 
-* It would be interesting in future iterations, to get a more detailed view of what is being purchased. This could potentially help to understand where the campaign leads to the purchase of (perceived) similar products. 
-* Depending on who the customer is, we might want to calculate the ROI of the Loop™ campaign 
-* It would be interesting figure out the "0's" (ie getting total people who went to the store but didn't buy that beer, helping to understand if they bought different beer/wine).
-* With the variations in sales amount vs dollars it would be interesting to get increase visibility to other potential confounding affects (ie sales).
-
+* It would be interesting in future iterations, 
 
 ## Assumptions 
 
@@ -86,19 +80,99 @@ _(Note: this section would likely take a different shape as familiarity with the
 
 With this analysis we are assuming that: 
 
-* The type/size of stores are similar for the across the 3 groups. (ie if the groups were stratified by size then the resulting sales could be more a factor of store size and less the campaign)
-* The store regions are similar enough (ie the campaign might not be relevant to certain communities or the communities could be in different SES leading to different reactions to the pandemic). 
-* The potential time of year impact is captured similarly across the 3 groups (ie if beer/wine is most popular during Thanksgiving/ 4th of July, that the store groups capture that time period similarly across groups).
-* The beers made available by Brewery A were consistent across stores, and were placed in a relatively similar proximity to the Loop™/ were accessible to the customer.
 
 
 </div>
 
 
 
-# Summary of Impact {.tabset .tabset-pills}
+# Overview of Data {.tabset .tabset-pills}
+Load the dataset and perform EDA and determine if any cleanup (data conversions, name changes, scaling, imputation of missing values, etc.) is needed. 
 
-## Avg Velocity Amount (Sales $)
+## Load Data
+ 
+```{r}
+top50 <- read_csv(here::here("inputs", "top50.csv")) %>% 
+  select(-...1) %>% 
+  mutate(CleanTrack = iconv(Track.Name, to = "utf-8"))
+
+names(top50) <- gsub("\\.", "", names(top50)) # ro remove periods from column names
+
+```
+
+
+## Review ggpairs for variables
+Looks like upon initial review that there are decent correlations between:  
+
+* BPM and Speechiness  
+* Energy and Loudness  
+* Energy and Valence  
+* Energy and Acousticness  
+* Popularity and Valence  
+
+I am not sure what "Valence" means, so I would probably want to look this up to understand it a little more.
+
+
+```{r, fig.widt=12, fig.height=12}
+GGally::ggpairs(top50, columns = 4:13)
+```
+
+## Review Genre
+
+Looked to see if there are general groups the different genres fall within.   
+
+* There are many pop songs as well as multiple pop categories. It's possible that the category of a song could impact it's popularity, but that analysis is likely one for a larger dataset.
+
+
+```{r}
+
+top50 %>% 
+  mutate(GenreGroup = case_when(str_detect(Genre, "pop") ~ "pop",
+                                str_detect(Genre, "hip hop") ~ "hip hop",
+                                str_detect(Genre, "rap") ~ "rap",
+                                str_detect(Genre, "reggaeton") ~ "reggaeton",
+                                TRUE ~ "Other")) %>% 
+  count(GenreGroup,Genre, sort=T) %>% 
+  arrange(GenreGroup, n) %>% 
+  DT::datatable()
+
+```
+
+
+
+# Colinearity Review
+Determine if any correlation exists between features.  
+
+# Popularity Scores
+Visualize and examine the distribution of popularity scores and show if any outliers or skewing exists.  
+
+Decided to overlay a violin and a box plot.   
+
+* It looks like the popularity scores range from 70 to 95, with the majority of the scores falling more within the 85 to 92 range.  
+* Accordingly the two lowest scores of 70 and 78 fall out of the lower quartile, and could be considered outliers in this dataset. 
+
+
+```{r}
+top50 %>% 
+  ggplot(aes(x= "", y= Popularity))+
+  geom_violin(alpha = 0.2, fill = "grey")+
+  geom_boxplot(alpha = 0.6)+
+  labs(title = "Distribution of Popularity")
+```
+
+
+# Predict Popularity
+Perform any transformations as needed and create a model to predict the popularity of a song, while avoiding overfitting and showing relevant scores.
+
+```{r}
+
+```
+
+
+
+
+
+
 
 
 

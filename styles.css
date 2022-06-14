@@ -305,11 +305,13 @@ padding-top:inherit;
 
 
 .navbar-default {
-    background: #115A7F url(https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg) no-repeat left;
+    background: #115A7F "spacee.svg" no-repeat left;
     background-size: 41px 30px;
     background-origin: content-box, padding-box;
     padding: 0 20px 0 20px;
 }
+
+/*url(https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg)*/
 
 .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
     margin-left: 35px;

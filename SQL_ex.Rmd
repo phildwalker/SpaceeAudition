@@ -10,18 +10,13 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Goal
+# Prompt
 
-This section is meant to help show my general process around:
-
-* ingesting the dataset  
-* exploring the results  
-* developing the cleaned views  
-
-I am intentionally not spending a ton of time working to clean up the visuals or extensively documenting the results, but I have enable the "show code" functionality as part of the yaml header for this rmd file (eda.Rmd). 
-
-If desired the entirity of the website can be found on github [https://github.com/phildwalker/looma_audition]
-
+Each user can have multiple sessions. Write a SQL query that:
+- selects the ‘userIds’ with the top 50 average session durations
+- selects their full name from the user table as a single new column
+*Bonus for adding in a new column for each user and flagging their 3rd longest duration with 1,
+otherwise put 0 (put 0 if they have fewer than 3 sessions)
 
 
 ```{r setup, include = F}
@@ -43,8 +38,6 @@ source("./src/spacee_theme.R")
 
 
 ```
-
-
 
 
 

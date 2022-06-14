@@ -32,7 +32,7 @@ __3. SQL: Transactions__
 
 # Notes
 
-* This site is currently hosted for free using the netlify app. [https://spacee-audition.netlify.app]. It is currently connected to the repo which houses the site as well as the analysis steps [https://github.com/phildwalker/SpaceeAudition]
+* This site is currently hosted for free using the netlify app. __[https://spacee-audition.netlify.app]__. It is currently connected to the repo which houses the site as well as the analysis steps __[https://github.com/phildwalker/SpaceeAudition]__
     * Please let me know if you would like for me to take the site down (while I don't have any internet followers, I'm not sure if there are any concerns around the exercise surfacing on the internet).
 
 * I am very grateful for both the abundance of resources online to help provide the documentation to quickly get this site deployed via netlify, as well as my current coworkers at Cone Health who have helped me to grow in my R knowledge as well as helping to show me how to integrate the css/html portions to take the results to another level.

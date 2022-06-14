@@ -4,10 +4,10 @@ navbar:
   title: "Spacee Audition"
   left:
     - text: "R: Top 50"
-      icon: fa-book-open-cover
+      icon: fa-paper-plane
       href: analysis.html
     - text: "R: Precision-Recall"
-      icon: fa-face-thinking"
+      icon: fa-hand-spock
       href: eda.html
     - text: "SQL: "  
       icon: fa-seedling
