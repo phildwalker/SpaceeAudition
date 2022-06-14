@@ -18,16 +18,21 @@ Thank you so much for your time!
 
 __1. R: Top 50 Analysis__
 
-* In this section, the goal was to show my analysis of the csv provided (top_50.csv)
+* In this section, the goal was to show my analysis of the csv provided (top_50.csv)  
+* The code in this section is meant to be able to be hidden and shown as desired, so the reviewer can see my thought process.
 
 __2. R: Precision/Recall__    
 
-* This section has served as a way for me to document the general analysis paths I follows as I was investigating the data.   
-* Please note that it is not a very polished view, but instead included some of my notes of what I was seeing in the results as I was digging into the data.  
+* This section, I utilized a dataset from the "tidyTuesday" repository and simplified the problem to create a first pass of a classification model.  
+* It is off this model that I ran precision/recall/accuracy metrics on the test split.  
+
 
 __3. SQL: Transactions__  
 
 * In this section, I will work through the work problem of the SQL example. 
+* I built some sample tables, which I believed would behave in a similar fashion to that of what was described.  
+* In the subsequent sections, I then added and ran the SQL code that I believe addressed the question at hand (with a sample of the output included below).
+
 
 
 # Notes
@@ -35,5 +40,5 @@ __3. SQL: Transactions__
 * This site is currently hosted for free using the netlify app. __[https://spacee-audition.netlify.app]__. It is currently connected to the repo which houses the site as well as the analysis steps __[https://github.com/phildwalker/SpaceeAudition]__
     * Please let me know if you would like for me to take the site down (while I don't have any internet followers, I'm not sure if there are any concerns around the exercise surfacing on the internet).
 
-* I am very grateful for both the abundance of resources online to help provide the documentation to quickly get this site deployed via netlify, as well as my current coworkers at Cone Health who have helped me to grow in my R knowledge as well as helping to show me how to integrate the css/html portions to take the results to another level.
+* I am very grateful for both the abundance of resources online to help provide the documentation to quickly get this site deployed via netlify, as well as my former coworkers at Cone Health who have helped me to grow in my R knowledge as well as helping to show me how to integrate the css/html portions to take the results to another level.
 

@@ -270,17 +270,46 @@ song_rec_trained %>%
 ```
 
 
-## Build Model
+## Build Model: With Random Forest
+
 
 ```{r}
+rf_defaults <- rand_forest(mode = "regression")
 
+rf_fit <- 
+  rf_defaults %>%
+  set_engine("ranger") %>%
+  fit(
+    Popularity ~ ., 
+    data = analysis(song_val$splits[[1]])
+  )
+```
+
+
+```{r}
+preds <- c("BeatsPerMinute", "Energy","Danceability","LoudnessdB","Liveness", "Valence","Length", "Acousticness","Speechiness")
+
+test_results <- 
+  song_test %>%
+  select(Popularity) %>%
+  bind_cols(
+    predict(rf_fit, new_data = song_test[, preds])
+  )
 ```
 
 
 
+```{r}
+test_results %>% metrics(truth = Popularity, estimate = .pred) 
+```
 
 
-
-
+```{r, out.width="100%"}
+test_results %>% 
+  ggplot(aes(x = .pred, y = Popularity)) + 
+  geom_abline(col = "green", lty = 2) + 
+  geom_point(alpha = .4) +  
+  coord_fixed()
+```
 
 
