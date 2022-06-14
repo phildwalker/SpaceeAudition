@@ -50,3 +50,17 @@ otherwise put 0 (put 0 if they have fewer than 3 sessions)
 -- Your query or pseudo query here.
 
 ## Thoughts from there
+
+- build out website
+- host on netlify, there's going to be 3 sub pages (2 R and one for sql)
+- one R modeling i pull in the csv they sent, the one i use my own data  
+  - probably use a dataset from a tidytuesday... as that's easy enough to pull in
+- for the sql portion, i will use their general table design and then write sql against it. 
+  - doesn't look like the transaction table was used? 
+
+
+
+
+
+
+

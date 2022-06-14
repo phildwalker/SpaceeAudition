@@ -1,0 +1,95 @@
+---
+title: "Precision and Recall"
+date: "`r paste0('Last Updated: ', format(Sys.time(), '%d %B, %Y')) `"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+# Prompt
+
+Write the code to calculate and plot the Precision-Recall curve for any existing ML model you like.   
+
+* Could be a predictor, classifier, or detector. Use any simple ground truth dataset you like. For example, if you use an object classifier or detector, it could be of dogs and cats, or bicycles and cars, or anything like that.  
+* However, the dataset choice is yours. 
+
+Turn in the code sample, GT (ground truth) dataset, and PR curve plot. 
+
+
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = T, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.align = 'center')
+
+library(tidyverse)
+library(patchwork)
+# library(pdwtheme)
+library(gt)
+library(infer)
+# To Turn off Scientific Notation Use this.
+options(scipen = 999)
+
+source("./src/spacee_theme.R")
+# theme_set(theme_minimal())
+
+load(file = here::here("data", "ratingsWide.rda"))  
+
+
+
+```
+
+
+# Data Overview
+__From the TidyTuesday github__ [https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-05-31]
+
+This survey is the result of a partnership between Axios and Harris Poll to gauge the reputation of the most visible brands in America, based on 20 years of Harris Poll research. From Trader Joe's to Disney, here's how this year's class stacks up.
+
+Methodology: The Axios Harris Poll 100 is based on a survey of 33,096 Americans in a nationally representative sample conducted March 11-April 3, 2022. The two-step process starts fresh each year by surveying the public’s top-of-mind awareness of companies that either excel or falter in society.
+
+These 100 “most visible companies” are then ranked by a second group of Americans across the seven key dimensions of reputation to arrive at the ranking. If a company is not on the list, it did not reach a critical level of visibility to be measured.
+
+
+The ”ratings” phase of the survey was conducted among 33,096 online interviews from March 11th to April 2nd, 2022 among a nationally representative sample of U.S. adults. Respondents were randomly assigned two companies to rate for which they answered they were very or somewhat familiar with. Each company received approximately 325 ratings. An RQ score is calculated by: [ (Sum of ratings of each of the 9 attributes)/(the total number of attributes answered x 7) ] x 100. Score ranges: 80 & above: Excellent | 75-79: Very Good | 70-74: Good | 65-69: Fair | 55-64: Poor | 50-54: Very Poor | Below 50: Critical
+
+
+# Data Cleaning 
+
+```{r}
+compRatings <- 
+  ratingsWide %>% 
+  mutate(ScoreGroup = case_when(`2022_rq` >= 80 ~ "Excellent",
+                                `2022_rq` < 80 &  `2022_rq` >= 75 ~ "Very Good",
+                                `2022_rq` < 75 &  `2022_rq` >= 70 ~ "Good",
+                                `2022_rq` < 70 &  `2022_rq` >= 65 ~ "Fair",
+                                `2022_rq` < 65 &  `2022_rq` >= 55 ~ "Poor",
+                                `2022_rq` < 55 &  `2022_rq` >= 50 ~ "Very Poor",
+                                `2022_rq` < 50 ~ "Critical"))
+```
+
+
+# Simple Prediction
+Looking to see if how well we could predict the industry from 
+
+
+## Create Inital Test and Train Split
+```{r}
+library(tidymodels)
+
+song_split <- initial_split(top50[,4:13], prop = 0.8)
+
+song_train <- training(song_split)
+song_test  <- testing(song_split)
+
+song_val <- validation_split(song_train, prop = 4/5)
+song_val$splits[[1]]
+```
+
+
+
+
+
+

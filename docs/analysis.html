@@ -377,7 +377,7 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="eda.html">
+  <a href="ownDat.html">
     <span class="fa fa-hand-spock"></span>
      
     R: Precision-Recall
@@ -441,42 +441,16 @@ relevant scores.</li>
 <div id="goal" class="section level2">
 <h2>Goal</h2>
 <p><strong>Goal:</strong></p>
-<p>We want to know the impact the Loop™ campaign had on sales. By
-comparing the different groups we would like to learn a few different
-things:</p>
-<ul>
-<li>Is there an impact of the “Brewery A” Loop™ Campaign on sales?
-<ul>
-<li>If we see that the “program_test” condition has increased sales as
-compared to both the baseline and the “film_control” condition we can be
-confident that it was Brewery A’s film that had the affect on sales and
-not just the slick Loop™ campaign ipad with the other videos.</li>
-</ul></li>
-<li>If so what is the impact? (Sales amount vs sales dollars)</li>
-</ul>
+<p>We want to learn more about the impact of different measures on a
+song’s popularity, and ideally be able to then use that knowledge to be
+able to predict what would make a highly popular song</p>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
 <p><strong>Results:</strong><br />
 From the analysis we find that:</p>
 <ol style="list-style-type: decimal">
-<li>Overall the Loop™ campaign looks to had a positive impact on Brewery
-A’s sales.<br />
-</li>
-<li>The sales increased year over year for all groups.
-<ul>
-<li>This could mean that the brand awareness for the Brewery has
-generally increased over time.</li>
-<li>Could be a Covid affect (more people trying beer) or that there were
-more options made available to customers over time.</li>
-</ul></li>
-<li>The “program test” both show an increase in the mean sales (both
-amount and dollars) as compared to the baseline and the film control.
-<ul>
-<li>For this sample, it looks like the Loop™ campaign <strong>increased
-Brewery A sales on average by ~$15</strong> (roughly 1 additional unit)
-on average as compared to the baseline</li>
-</ul></li>
+<li>Overall,</li>
 </ol>
 <p><strong>Potential Investigation Next Steps:</strong></p>
 <ul>
@@ -516,8 +490,12 @@ between:</p>
 <li>Popularity and Valence</li>
 </ul>
 <p>I am not sure what “Valence” means, so I would probably want to look
-this up to understand it a little more.</p>
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+this up to understand it a little more as it seems to be coorelated to
+Popularity (which is what we are trying to model)</p>
+<p>Each significance level is associated to a symbol : p-values(0,
+0.001, 0.01, 0.05, 0.1, 1) &lt;=&gt; symbols(“<em><strong>”,
+“</strong>”, “</em>”, “.”, ” “)</p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="review-genre" class="section level2">
 <h2>Review Genre</h2>
@@ -528,13 +506,20 @@ within.</p>
 possible that the category of a song could impact it’s popularity, but
 that analysis is likely one for a larger dataset.</li>
 </ul>
-<div id="htmlwidget-4a35a989b69c837eafd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4a35a989b69c837eafd9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["hip hop","hip hop","Other","Other","Other","Other","Other","Other","Other","pop","pop","pop","pop","pop","pop","pop","rap","rap","rap","reggaeton","reggaeton"],["atl hip hop","canadian hip hop","big room","boy band","escape room","r&amp;b en espanol","brostep","edm","latin","australian pop","pop house","canadian pop","electropop","panamanian pop","pop","dance pop","trap music","country rap","dfw rap","reggaeton","reggaeton flow"],[1,3,1,1,1,1,2,3,5,1,1,2,2,2,7,8,1,2,2,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>GenreGroup<\/th>\n      <th>Genre<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a01306783ebfc6ebff31" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a01306783ebfc6ebff31">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["hip hop","hip hop","Other","Other","Other","Other","Other","Other","Other","pop","pop","pop","pop","pop","pop","pop","rap","rap","rap","reggaeton","reggaeton"],["atl hip hop","canadian hip hop","big room","boy band","escape room","r&amp;b en espanol","brostep","edm","latin","australian pop","pop house","canadian pop","electropop","panamanian pop","pop","dance pop","trap music","country rap","dfw rap","reggaeton","reggaeton flow"],[1,3,1,1,1,1,2,3,5,1,1,2,2,2,7,8,1,2,2,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>GenreGroup<\/th>\n      <th>Genre<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<div id="colinearity-review" class="section level1">
-<h1>Colinearity Review</h1>
+<div id="coorelation-review" class="section level1">
+<h1>Coorelation Review</h1>
 <p>Determine if any correlation exists between features.</p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Table with the correlations with a p-value &lt; 0.05</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["row"],"name":[1],"type":["chr"],"align":["left"]},{"label":["column"],"name":[2],"type":["chr"],"align":["left"]},{"label":["cor"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["p"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Energy","2":"LoudnessdB","3":"0.6707936","4":"0.00000009812894"},{"1":"BeatsPerMinute","2":"Speechiness","3":"0.5570519","4":"0.00002650456103"},{"1":"Energy","2":"Valence","3":"0.4388196","4":"0.00143346956985"},{"1":"Energy","2":"Acousticness","3":"-0.3398917","4":"0.01573568989574"},{"1":"Valence","2":"Popularity","3":"-0.3177524","4":"0.02453491366044"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="popularity-scores" class="section level1">
 <h1>Popularity Scores</h1>
@@ -548,13 +533,42 @@ majority of the scores falling more within the 85 to 92 range.<br />
 <li>Accordingly the two lowest scores of 70 and 78 fall out of the lower
 quartile, and could be considered outliers in this dataset.</li>
 </ul>
-<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="predict-popularity" class="section level1">
-<h1>Predict Popularity</h1>
+<div id="predict-popularity" class="section level1 tabset tabset-pills">
+<h1 class="tabset tabset-pills">Predict Popularity</h1>
 <p>Perform any transformations as needed and create a model to predict
 the popularity of a song, while avoiding overfitting and showing
 relevant scores.</p>
+<div id="build-training-and-test-splits" class="section level2">
+<h2>Build training and test splits</h2>
+<pre><code>## &lt;Training/Validation/Total&gt;
+## &lt;32/8/40&gt;</code></pre>
+</div>
+<div id="adjust-for-coorelations" class="section level2">
+<h2>Adjust for coorelations</h2>
+<p>Knowing that some of the variables are correlated, will then</p>
+<pre><code>## Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          9
+## 
+## Training data contained 32 data points and no missing data.
+## 
+## Operations:
+## 
+## Zero variance filter removed &lt;none&gt; [trained]
+## orderNorm transformation on BeatsPerMinute, Energy, Danceability, Loud... [trained]
+## Centering and scaling for BeatsPerMinute, Energy, Danceability, Loudnessd... [trained]</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="build-model" class="section level2">
+<h2>Build Model</h2>
+</div>
 </div>
 
 &nbsp;

@@ -8,7 +8,7 @@ navbar:
       href: analysis.html
     - text: "R: Precision-Recall"
       icon: fa-hand-spock
-      href: eda.html
+      href: ownDat.html
     - text: "SQL: Sample User Data"  
       icon: fa-seedling
       href: SQL_ex.html

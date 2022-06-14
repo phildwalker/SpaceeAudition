@@ -369,7 +369,7 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="eda.html">
+  <a href="ownDat.html">
     <span class="fa fa-hand-spock"></span>
      
     R: Precision-Recall
@@ -411,11 +411,75 @@ div.tocify {
 <div id="prompt" class="section level1">
 <h1>Prompt</h1>
 <p>Write the code to calculate and plot the Precision-Recall curve for
-any existing ML model you like. Could be a predictor, classifier, or
-detector. Use any simple ground truth dataset you like. For example, if
-you use an object classifier or detector, it could be of dogs and cats,
-or bicycles and cars, or anything like that. However, the dataset choice
-is yours. Turn in the code sample, GT dataset, and PR curve plot.</p>
+any existing ML model you like.</p>
+<ul>
+<li>Could be a predictor, classifier, or detector. Use any simple ground
+truth dataset you like. For example, if you use an object classifier or
+detector, it could be of dogs and cats, or bicycles and cars, or
+anything like that.<br />
+</li>
+<li>However, the dataset choice is yours.</li>
+</ul>
+<p>Turn in the code sample, GT (ground truth) dataset, and PR curve
+plot.</p>
+</div>
+<div id="data-overview" class="section level1">
+<h1>Data Overview</h1>
+<p><strong>From the TidyTuesday github</strong> [<a
+href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-05-31"
+class="uri">https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-05-31</a>]</p>
+<p>This survey is the result of a partnership between Axios and Harris
+Poll to gauge the reputation of the most visible brands in America,
+based on 20 years of Harris Poll research. From Trader Joe’s to Disney,
+here’s how this year’s class stacks up.</p>
+<p>Methodology: The Axios Harris Poll 100 is based on a survey of 33,096
+Americans in a nationally representative sample conducted March 11-April
+3, 2022. The two-step process starts fresh each year by surveying the
+public’s top-of-mind awareness of companies that either excel or falter
+in society.</p>
+<p>These 100 “most visible companies” are then ranked by a second group
+of Americans across the seven key dimensions of reputation to arrive at
+the ranking. If a company is not on the list, it did not reach a
+critical level of visibility to be measured.</p>
+<p>The ”ratings” phase of the survey was conducted among 33,096 online
+interviews from March 11th to April 2nd, 2022 among a nationally
+representative sample of U.S. adults. Respondents were randomly assigned
+two companies to rate for which they answered they were very or somewhat
+familiar with. Each company received approximately 325 ratings. An RQ
+score is calculated by: [ (Sum of ratings of each of the 9
+attributes)/(the total number of attributes answered x 7) ] x 100. Score
+ranges: 80 &amp; above: Excellent | 75-79: Very Good | 70-74: Good |
+65-69: Fair | 55-64: Poor | 50-54: Very Poor | Below 50: Critical</p>
+</div>
+<div id="data-cleaning" class="section level1">
+<h1>Data Cleaning</h1>
+<pre class="r"><code>compRatings &lt;- 
+  ratingsWide %&gt;% 
+  mutate(ScoreGroup = case_when(`2022_rq` &gt;= 80 ~ &quot;Excellent&quot;,
+                                `2022_rq` &lt; 80 &amp;  `2022_rq` &gt;= 75 ~ &quot;Very Good&quot;,
+                                `2022_rq` &lt; 75 &amp;  `2022_rq` &gt;= 70 ~ &quot;Good&quot;,
+                                `2022_rq` &lt; 70 &amp;  `2022_rq` &gt;= 65 ~ &quot;Fair&quot;,
+                                `2022_rq` &lt; 65 &amp;  `2022_rq` &gt;= 55 ~ &quot;Poor&quot;,
+                                `2022_rq` &lt; 55 &amp;  `2022_rq` &gt;= 50 ~ &quot;Very Poor&quot;,
+                                `2022_rq` &lt; 50 ~ &quot;Critical&quot;))</code></pre>
+</div>
+<div id="simple-prediction" class="section level1">
+<h1>Simple Prediction</h1>
+<p>Looking to see if how well we could predict the industry from</p>
+<div id="create-inital-test-and-train-split" class="section level2">
+<h2>Create Inital Test and Train Split</h2>
+<pre class="r"><code>library(tidymodels)
+
+song_split &lt;- initial_split(top50[,4:13], prop = 0.8)
+
+song_train &lt;- training(song_split)
+song_test  &lt;- testing(song_split)
+
+song_val &lt;- validation_split(song_train, prop = 4/5)
+song_val$splits[[1]]</code></pre>
+<pre><code>## &lt;Training/Validation/Total&gt;
+## &lt;32/8/40&gt;</code></pre>
+</div>
 </div>
 
 &nbsp;

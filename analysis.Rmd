@@ -47,11 +47,7 @@ Perform the following with the attached “top50.csv” file:
 
 __Goal:__  
 
-We want to know the impact the Loop™ campaign had on sales. By comparing the different groups we would like to learn a few different things:  
-
-* Is there an impact of the "Brewery A" Loop™ Campaign on sales?
-    * If we see that the "program_test" condition has increased sales as compared to both the baseline and the "film_control" condition we can be confident that it was Brewery A's film that had the affect on sales and not just the slick Loop™ campaign ipad with the other videos.
-* If so what is the impact? (Sales amount vs sales dollars)
+We want to learn more about the impact of different measures on a song's popularity, and ideally be able to then use that knowledge to be able to predict what would make a highly popular song
 
  
 
@@ -61,12 +57,7 @@ We want to know the impact the Loop™ campaign had on sales. By comparing the d
 __Results:__  
 From the analysis we find that:
 
-1. Overall the Loop™ campaign looks to had a positive impact on Brewery A's sales.  
-1. The sales increased year over year for all groups.  
-    * This could mean that the brand awareness for the Brewery has generally increased over time.
-    * Could be a Covid affect (more people trying beer) or that there were more options made available to customers over time.
-1. The "program test" both show an increase in the mean sales (both amount and dollars) as compared to the baseline and the film control.  
-    * For this sample, it looks like the Loop™ campaign __increased Brewery A sales on average by ~$15__ (roughly 1 additional unit) on average as compared to the baseline  
+1. Overall,  
 
 
 __Potential Investigation Next Steps:__ 
@@ -110,10 +101,11 @@ Looks like upon initial review that there are decent correlations between:
 * Energy and Acousticness  
 * Popularity and Valence  
 
-I am not sure what "Valence" means, so I would probably want to look this up to understand it a little more.
+I am not sure what "Valence" means, so I would probably want to look this up to understand it a little more as it seems to be coorelated to Popularity (which is what we are trying to model)
 
+Each significance level is associated to a symbol : p-values(0, 0.001, 0.01, 0.05, 0.1, 1) <=> symbols(“***”, “**”, “*”, “.”, " “)
 
-```{r, fig.widt=12, fig.height=12}
+```{r, fig.width=10, fig.height=10, out.width="100%"}
 GGally::ggpairs(top50, columns = 4:13)
 ```
 
@@ -140,8 +132,44 @@ top50 %>%
 
 
 
-# Colinearity Review
+# Coorelation  Review
 Determine if any correlation exists between features.  
+
+
+```{r}
+corTest <- top50[,4:13]
+res <- cor(corTest)  
+
+col<- colorRampPalette(c("blue", "white", "red"))(20)
+heatmap(x = res, col = col, symm = TRUE)
+
+```
+
+```{r}
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+    )
+}
+res2<-Hmisc::rcorr(as.matrix(top50[,4:13]))
+
+corLong <- flattenCorrMatrix(res2$r, res2$P) %>% 
+  arrange(p) 
+
+```
+
+Table with the correlations with a p-value < 0.05
+
+```{r}
+corLong %>% 
+  filter(p < 0.05)
+```
+
+
 
 # Popularity Scores
 Visualize and examine the distribution of popularity scores and show if any outliers or skewing exists.  
@@ -161,8 +189,88 @@ top50 %>%
 ```
 
 
-# Predict Popularity
+# Predict Popularity {.tabset .tabset-pills}
 Perform any transformations as needed and create a model to predict the popularity of a song, while avoiding overfitting and showing relevant scores.
+
+
+## Build training and test splits
+```{r}
+library(tidymodels)
+
+song_split <- initial_split(top50[,4:13], prop = 0.8)
+
+song_train <- training(song_split)
+song_test  <- testing(song_split)
+
+song_val <- validation_split(song_train, prop = 4/5)
+song_val$splits[[1]]
+```
+
+```{r, eval=F}
+tmwr_cols <- colorRampPalette(c("#91CBD765", "#CA225E"))
+
+song_train %>% 
+  select(-Popularity) %>%
+  cor() %>% 
+  corrplot::corrplot(col = tmwr_cols(200), tl.col = "black", method = "ellipse")
+```
+
+
+## Adjust for coorelations
+Knowing that some of the variables are correlated, will then 
+
+```{r}
+library(bestNormalize)
+
+song_rec <-
+  # Use the training data from the bean_val split object
+  recipe(Popularity ~ ., data = analysis(song_val$splits[[1]])) %>%
+  step_zv(all_numeric_predictors()) %>%
+  step_orderNorm(all_numeric_predictors()) %>% 
+  step_normalize(all_numeric_predictors())
+
+song_rec_trained <- prep(song_rec)
+song_rec_trained
+```
+
+```{r}
+
+library(ggforce)
+plot_validation_results <- function(recipe, dat = assessment(song_val$splits[[1]])) {
+  recipe %>%
+    # Estimate any additional steps
+    prep() %>%
+    # Process the data (the validation set by default)
+    bake(new_data = dat) %>%
+    # Create the scatterplot matrix
+    ggplot(aes(x = .panel_x, y = .panel_y)) + # ,color = Popularity, fill = Popularity
+    geom_point(alpha = 0.4, size = 0.5) +
+    geom_autodensity(alpha = .3) +
+    facet_matrix(vars(-Popularity), layer.diag = 2) + 
+    scale_color_brewer(palette = "Dark2") + 
+    scale_fill_brewer(palette = "Dark2")
+}
+
+
+song_rec_trained %>%
+  step_pca(all_numeric_predictors(), num_comp = 4) %>%
+  plot_validation_results() + 
+  ggtitle("Principal Component Analysis")
+
+```
+
+```{r}
+library(learntidymodels)
+song_rec_trained %>%
+  step_pca(all_numeric_predictors(), num_comp = 4) %>% 
+  prep() %>% 
+  plot_top_loadings(component_number <= 4, n = 5) + #uses the learntidymodels
+  scale_fill_brewer(palette = "Paired") +
+  ggtitle("Principal Component Analysis")
+```
+
+
+## Build Model
 
 ```{r}
 
