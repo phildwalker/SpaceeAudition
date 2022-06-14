@@ -1,0 +1,372 @@
+.legend{
+clear:initial !important;
+}
+
+th{background-color: #115A7F;
+color:white}
+
+tr{color:#115A7F}
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+h1.title {
+    font-size: 28px;
+    font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+    color: #115A7F;
+  }
+h1 { /* Header 1 */
+    font-size: 24px;
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  color: #115A7F;
+}
+h2 { /* Header 2 */
+    font-size: 18px;
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  color: #115A7F;
+}
+h3 { /* Header 3 */
+    font-size: 18px;
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  color: #115A7F;
+}
+h4.author { /* Header 3 */
+    font-size: 18px;
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  color: #555555;
+}
+h4.date { /* Header 3 */
+    font-size: 18px;
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  color: #555555;
+    font-style: italic;
+}
+body {
+  font-family: "Gotham SSm A","Gotham SSm B",'Montserrat',Arial,sans-serif;
+  font-size: 16px;
+}
+a {
+  color: #115A7F;
+}
+a:hover, a:focus {
+  color: #00B4F1;
+}
+.btn {
+  border-width: 0 0px 0px 0px;
+  font-weight: normal;
+  color: #ffffff;
+    background-color: #115A7F;
+    border-color: #115A7F;
+}
+.btn-default {
+  color: #115A7F;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+/** Changes the tabset to Cone themed colours
+*/
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus {
+  color: #ffffff;
+    background-color: #115A7F;
+}
+
+.nav-pills > li.active > a:hover {
+  color: #115A7F;
+    background-color: #00B4F1;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    background-color: #115A7F;
+    border-color: #115A7F;
+}
+
+
+.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+.tip {
+    padding: 0.5em;
+    background-color: #dbfaf4;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/** Summary Block Chunk which outlines in Cone Blue
+*/
+
+.summaryblock{
+  padding: 1em 1em 1em 1em;
+  margin-bottom: 10px;
+  color: #333E50;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #115A7F;
+}
+
+.summaryblock > a {
+  color: #d8dfee;
+}
+
+/** Alter Box in Clemson Orange
+*/
+
+.alertblock{
+  padding: 1em 1em 1em 1em;
+  margin-bottom: 10px;
+  color: #333E50;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #F66733;
+}
+
+.alertblock > a {
+  color: #d8dfee;
+}
+
+/**Automatically resize to full screen
+*/
+
+.main-container {
+  /*max-width: 1800px !important;*/
+  max-width: 95% !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table{
+      width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    max-width:95%;
+}
+
+.table>tbody>tr>td{
+  padding:3px 20px 3px 20px;
+}
+
+.table>thead>tr>th{
+  padding:5px 20px 5px 20px;
+}
+
+
+
+/** Adds a watermark to the document
+*/
+
+
+
+
+
+
+
+
+
+
+/** Adding in Drop Down Button for Code Chunks
+See `dropdown` code chunk setting for implementations in knitted doc
+*/
+
+button.btn.collapsed:before
+{
+    content:'+' ;
+    display:block;
+    width:15px;
+}
+button.btn:before
+{
+    content:'-' ;
+    display:block;
+    width:15px;
+}
+
+/** Weird Code Folding Issues
+*/
+
+div.sourceCode {
+  overflow-x: hidden;
+}
+
+
+/* Nav Bar Stuff */
+.navbar, .distill-site-nav {
+	background-color: #115A7F;
+	background-image: none;
+	text-decoration: none;
+	text-shadow: none;
+}
+
+.navbar-default .navbar-nav>li>a, .distill-site-nav a {
+
+    color: white;
+	font-size: 19px;
+}
+
+.navbar-default .navbar-link:hover, .navbar-default .navbar-link:focus {
+    color: white;
+}
+
+.navbar-default .navbar-nav{
+  margin-left:35px;
+}
+
+.navbar-default .navbar-brand, .distill-site-header .title {
+    color: white;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.navbar-default .navbar-link {
+	color: white;
+	background-color: #115A7F;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus, .distill-site-nav a:hover, .distill-site-nav a:focus {
+    color: white;
+    background-color: #00B4F1;
+}
+
+
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+    font-weight: bold;
+    color: #115A7F;
+    background-color: white;
+}
+
+.dropdown-menu>li>a {
+    color: #115A7F;
+    background-color: white;
+}
+
+.navbar-default .navbar-nav>.open>a:hover{
+    background-color: transparent;
+    color: #00B4F1;
+}
+
+.navbar-default .navbar-nav>.open>a:focus {
+  background-color: transparent;
+    color: #00B4F1;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+
+
+
+
+
+
+    color: white;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+    background-color: #00B4F1;
+
+
+    color: white;
+}
+
+.main-container {
+padding-top:inherit;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+    color: white;
+    text-decoration: none;
+    background-color: #00B4F1;
+}
+
+
+.navbar-brand {
+    padding: 17px 10px 10px;
+    line-height: 20px;
+    height: 55px;
+    margin-left: -50px;
+}
+
+
+.nav>li>a {
+    padding-top: 17px;
+    padding-bottom: 13px;
+    line-height: 23px;
+    height: 55px;
+}
+
+
+.navbar-default {
+    background: #115A7F url(https://uploads-ssl.webflow.com/624c5b50813cc7cee0…3338/624c7376e82524bc1e0d1e4b_spacee-wordmark.svg) no-repeat left;
+    background-size: 41px 30px;
+    background-origin: content-box, padding-box;
+    padding: 0 20px 0 20px;
+}
+
+.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: 35px;
+}
+
+
+
+.warning {
+    display: inline-flex;
+    margin: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    /* font-size: 1rem; */
+    line-height: 1.25;
+    color: #0b0c0c;
+}
+
+.warning:before {
+    display: inline-block;
+    margin: 10px;
+    content: "!";
+    color: white;
+    background: #d4351c;
+    font-weight: 700;
+    left: 50px;
+    min-width: 35px;
+    max-width: 35px;
+    max-height: 35px;
+    min-height: 35px;
+    margin-top: -7px;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 35px;
+    text-align: center;
+}
+
+.watermark {
+  opacity: 0.5;
+  position: fixed;
+  top: 85%;
+  left: 35%;
+  font-size: 14px;
+  color:  #CC0000;
+}
+
+
+
+
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus{
+	background-color: #115A7F
+}
+
+.storyboard-nav .sbframelist ul li.active {
+    background-color: rgb(0 162 178);
+}
+
+.navbar-inverse {
+    background-color: #115A7F;
+    border-color: #115A7F;
+}

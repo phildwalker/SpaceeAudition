@@ -1,0 +1,39 @@
+---
+title: "Welcome"
+# output: html_notebook
+---
+
+This is the welcome page to the audition exercise, so welcome!
+
+For this body of work, I have captured both the development cycle and deployment of the results within the same r workflow, using an rproject + rmarkdown files to organize my work (version controlled within a github repo) and then deployed this website via netlify.
+
+Please click on the different sections above to navigate to those respective bodies of work. 
+
+Thank you so much for your time!  
+-phil
+
+<br>
+
+# Section Overview  
+
+__1. R: Top 50 Analysis__
+
+* In this section, the goal was to show my analysis of the csv provided (top_50.csv)
+
+__2. R: Precision/Recall__    
+
+* This section has served as a way for me to document the general analysis paths I follows as I was investigating the data.   
+* Please note that it is not a very polished view, but instead included some of my notes of what I was seeing in the results as I was digging into the data.  
+
+__3. SQL: Transactions__  
+
+* In this section, I will work through the work problem of the SQL example. 
+
+
+# Notes
+
+* This site is currently hosted for free using the netlify app. [https://looma-audition.netlify.app/]. It is currently connected to the repo which houses the site as well as the analysis steps [https://github.com/phildwalker/SpaceeAudition]
+    * Please let me know if you would like for me to take the site down (while I don't have any internet followers, I'm not sure if there are any concerns around the exercise surfacing on the internet).
+
+* I am very grateful for both the abundance of resources online to help provide the documentation to quickly get this site deployed via netlify, as well as my current coworkers at Cone Health who have helped me to grow in my R knowledge as well as helping to show me how to integrate the css/html portions to take the results to another level.
+

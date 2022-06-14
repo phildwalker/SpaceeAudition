@@ -1,0 +1,31 @@
+name: "Spacee Audition: Data Science Team"
+output_dir: "docs"
+navbar:
+  title: "Spacee Audition"
+  left:
+    - text: "R: Top 50"
+      icon: fa-book-open-cover
+      href: analysis.html
+    - text: "R: Precision-Recall"
+      icon: fa-face-thinking"
+      href: eda.html
+    - text: "SQL: "  
+      icon: fa-seedling
+      href: SQL_ex.html
+
+
+  # right:
+  #   - text: "Contact"
+  #     icon: glyphicon-question-sign
+  #     href: contact.html        
+output:
+  html_document:
+    theme: spacelab
+    df_print: paged
+    highlight: textmate
+    includes:
+      in_header: header.html
+      after_body: footer.html
+    css: styles.css
+    
+# favicon: favicon.ico

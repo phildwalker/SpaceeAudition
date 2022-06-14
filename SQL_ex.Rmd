@@ -1,0 +1,57 @@
+---
+title: "Precision and Recall"
+date: "`r paste0('Last Updated: ', format(Sys.time(), '%d %B, %Y')) `"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+editor_options: 
+  chunk_output_type: console
+---
+
+# Goal
+
+This section is meant to help show my general process around:
+
+* ingesting the dataset  
+* exploring the results  
+* developing the cleaned views  
+
+I am intentionally not spending a ton of time working to clean up the visuals or extensively documenting the results, but I have enable the "show code" functionality as part of the yaml header for this rmd file (eda.Rmd). 
+
+If desired the entirity of the website can be found on github [https://github.com/phildwalker/looma_audition]
+
+
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = T, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.align = 'center')
+
+library(tidyverse)
+library(patchwork)
+# library(pdwtheme)
+library(gt)
+library(infer)
+# To Turn off Scientific Notation Use this.
+options(scipen = 999)
+
+source("./src/spacee_theme.R")
+
+# theme_set(theme_minimal())
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

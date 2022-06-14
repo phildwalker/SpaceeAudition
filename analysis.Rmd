@@ -1,0 +1,104 @@
+---
+title: "Top 50 Analysis"
+date: "`r paste0('Last Updated: ', format(Sys.time(), '%d %B, %Y')) `"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.align = 'center')
+
+library(tidyverse)
+library(patchwork)
+# library(pdwtheme)
+library(gt)
+library(infer)
+# To Turn off Scientific Notation Use this.
+options(scipen = 999)
+
+source("./src/spacee_theme.R")
+
+dat <- read_csv(here::here("inputs", "top50.csv"))
+
+```
+
+
+# Executive Summary {.tabset .tabset-pills}
+
+<div class = "summaryblock">
+
+## Prompt
+
+__Prompt:__
+
+Imagine we ran an experiment to test the impact a Loop™ campaign has on sales. The experiment involved 42 stores in 3 groups:  
+
+* _“Program test”_  These stores had the full Loop™ campaign as it would normally run, with a display of featured products and a tablet showing 2-3 films in a looping playlist  
+* _“Film control”_  These stores had the full program but with the film from one brand (“Brewery A”) left out.   
+* _“Baseline control”_  These stores did not have Loop™ campaigns or featured products on display.  
+
+Assume you need to provide an analysis of this experiment under time constraints (in reality, we expect you to devote 2-4 hours to this audition project).
+
+## Goal  
+
+__Goal:__  
+
+We want to know the impact the Loop™ campaign had on sales. By comparing the different groups we would like to learn a few different things:  
+
+* Is there an impact of the "Brewery A" Loop™ Campaign on sales?
+    * If we see that the "program_test" condition has increased sales as compared to both the baseline and the "film_control" condition we can be confident that it was Brewery A's film that had the affect on sales and not just the slick Loop™ campaign ipad with the other videos.
+* If so what is the impact? (Sales amount vs sales dollars)
+
+ 
+
+ 
+## Results
+
+__Results:__  
+From the analysis we find that:
+
+1. Overall the Loop™ campaign looks to had a positive impact on Brewery A's sales.  
+1. The sales increased year over year for all groups.  
+    * This could mean that the brand awareness for the Brewery has generally increased over time.
+    * Could be a Covid affect (more people trying beer) or that there were more options made available to customers over time.
+1. The "program test" both show an increase in the mean sales (both amount and dollars) as compared to the baseline and the film control.  
+    * For this sample, it looks like the Loop™ campaign __increased Brewery A sales on average by ~$15__ (roughly 1 additional unit) on average as compared to the baseline  
+
+
+__Potential Investigation Next Steps:__ 
+
+* It would be interesting in future iterations, to get a more detailed view of what is being purchased. This could potentially help to understand where the campaign leads to the purchase of (perceived) similar products. 
+* Depending on who the customer is, we might want to calculate the ROI of the Loop™ campaign 
+* It would be interesting figure out the "0's" (ie getting total people who went to the store but didn't buy that beer, helping to understand if they bought different beer/wine).
+* With the variations in sales amount vs dollars it would be interesting to get increase visibility to other potential confounding affects (ie sales).
+
+
+## Assumptions 
+
+__Assumptions:__
+_(Note: this section would likely take a different shape as familiarity with the data source increase/ relationship with the customer develops)_ 
+
+With this analysis we are assuming that: 
+
+* The type/size of stores are similar for the across the 3 groups. (ie if the groups were stratified by size then the resulting sales could be more a factor of store size and less the campaign)
+* The store regions are similar enough (ie the campaign might not be relevant to certain communities or the communities could be in different SES leading to different reactions to the pandemic). 
+* The potential time of year impact is captured similarly across the 3 groups (ie if beer/wine is most popular during Thanksgiving/ 4th of July, that the store groups capture that time period similarly across groups).
+* The beers made available by Brewery A were consistent across stores, and were placed in a relatively similar proximity to the Loop™/ were accessible to the customer.
+
+
+</div>
+
+
+
+# Summary of Impact {.tabset .tabset-pills}
+
+## Avg Velocity Amount (Sales $)
+
+
+
