@@ -50,26 +50,24 @@ __Goal:__
 We want to learn more about the impact of different measures on a song's popularity, and ideally be able to then use that knowledge to be able to predict what would make a highly popular song
 
  
+<!-- ## Results -->
 
- 
-## Results
+<!-- __Results:__   -->
+<!-- From the analysis we find that: -->
 
-__Results:__  
-From the analysis we find that:
-
-1. Overall,  
+<!-- 1. Overall,   -->
 
 
-__Potential Investigation Next Steps:__ 
+<!-- __Potential Investigation Next Steps:__  -->
 
-* It would be interesting in future iterations, 
+<!-- * It would be interesting in future iterations,  -->
 
-## Assumptions 
+<!-- ## Assumptions  -->
 
-__Assumptions:__
-_(Note: this section would likely take a different shape as familiarity with the data source increase/ relationship with the customer develops)_ 
+<!-- __Assumptions:__ -->
+<!-- _(Note: this section would likely take a different shape as familiarity with the data source increase/ relationship with the customer develops)_  -->
 
-With this analysis we are assuming that: 
+<!-- With this analysis we are assuming that:  -->
 
 
 
