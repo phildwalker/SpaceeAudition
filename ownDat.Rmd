@@ -26,10 +26,6 @@ knitr::opts_chunk$set(echo = T, message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(fig.align = 'center')
 
 library(tidyverse)
-library(patchwork)
-# library(pdwtheme)
-library(gt)
-library(infer)
 # To Turn off Scientific Notation Use this.
 options(scipen = 999)
 
@@ -37,8 +33,6 @@ source("./src/spacee_theme.R")
 # theme_set(theme_minimal())
 
 load(file = here::here("data", "ratingsWide.rda"))  
-
-
 
 ```
 
@@ -58,6 +52,8 @@ The ”ratings” phase of the survey was conducted among 33,096 online intervie
 
 # Data Cleaning 
 
+Taking the data, and decided to see if I could perform a simple classifier based on a subset of variables. I am just looking to see if the company ultimately would be classified as "Good" or "Bad" (Fair or worse) using the industry of the company, and the ratings of Ethics, Culture, and Citizenship. 
+
 ```{r}
 compRatings <- 
   ratingsWide %>% 
@@ -67,7 +63,19 @@ compRatings <-
                                 `2022_rq` < 70 &  `2022_rq` >= 65 ~ "Fair",
                                 `2022_rq` < 65 &  `2022_rq` >= 55 ~ "Poor",
                                 `2022_rq` < 55 &  `2022_rq` >= 50 ~ "Very Poor",
-                                `2022_rq` < 50 ~ "Critical"))
+                                `2022_rq` < 50 ~ "Critical")) %>% 
+  mutate(GoodBad = ifelse(ScoreGroup %in% c("Excellent", "Very Good", "Good"), "Good", "Bad")) %>% 
+  mutate(industryGroup = ifelse(industry %in% c("Retail", "Tech", "Food & Beverage", "Financial Services", "Automotive"), 
+                                industry, "All Other")) %>% 
+  select(industryGroup, ETHICS, CULTURE, CITIZENSHIP, GoodBad) %>% 
+  mutate(GoodBad = factor(GoodBad))
+```
+
+
+```{r}
+ratingsWide %>% 
+  count(industry, sort = T)
+  
 ```
 
 
@@ -79,17 +87,66 @@ Looking to see if how well we could predict the industry from
 ```{r}
 library(tidymodels)
 
-song_split <- initial_split(top50[,4:13], prop = 0.8)
+set.seed(1018)
 
-song_train <- training(song_split)
-song_test  <- testing(song_split)
+split <- initial_split(compRatings, strata = GoodBad, prop = .6)
 
-song_val <- validation_split(song_train, prop = 4/5)
-song_val$splits[[1]]
+train <- training(split)
+test  <- testing(split)
+
+# val <- validation_split(train, prop = 4/5)
+# val$splits[[1]]
+```
+
+## Classification Model
+
+```{r}
+# Make a model specifcation
+logreg_spec <- logistic_reg() %>% 
+  set_engine("glm") %>% 
+  set_mode("classification")
+
+# Train a logistic regression model
+logreg_fit <- logreg_spec %>% 
+  fit(GoodBad ~ ., data = train)
+
+
+# Print the model object
+logreg_fit
+
+```
+
+# Assessing Precision and Recall
+
+```{r}
+# Make predictions then bind them to the test set
+results <- test %>% select(GoodBad) %>% 
+  bind_cols(logreg_fit %>% predict(new_data = test))
+
+
+```
+
+```{r}
+# Calculate accuracy: proportion of data predicted correctly
+accuracy(data = results, truth = GoodBad, estimate = .pred_class)
+```
+
+```{r}
+# Confusion matrix for prediction results
+conf_mat(data = results, truth = GoodBad, estimate = .pred_class)
 ```
 
 
+* Precision: TP/(TP + FP) defined as the proportion of predicted positives that are actually positive. Also called positive predictive value  
+* Recall: TP/(TP + FN) defined as the proportion of positive results out of the number of samples which were actually positive. Also known as sensitivity.  
+* Specificity: TN/(TN + FP) defined as the proportion of negative results out of the number of samples which were actually negative.  
+* Accuracy: TP + TN/(TP + TN + FP + FN) The percentage of labels predicted accurately for a sample.  
+* F Measure: A weighted average of the precision and recall, with best being 1 and worst being 0.
 
-
+```{r}
+# Combine metrics and evaluate them all at once
+eval_metrics <- metric_set(ppv, recall, accuracy, f_meas)
+eval_metrics(data = results, truth = GoodBad, estimate = .pred_class)
+```
 
 

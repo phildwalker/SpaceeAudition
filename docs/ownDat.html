@@ -453,6 +453,11 @@ ranges: 80 &amp; above: Excellent | 75-79: Very Good | 70-74: Good |
 </div>
 <div id="data-cleaning" class="section level1">
 <h1>Data Cleaning</h1>
+<p>Taking the data, and decided to see if I could perform a simple
+classifier based on a subset of variables. I am just looking to see if
+the company ultimately would be classified as “Good” or “Bad” (Fair or
+worse) using the industry of the company, and the ratings of Ethics,
+Culture, and Citizenship.</p>
 <pre class="r"><code>compRatings &lt;- 
   ratingsWide %&gt;% 
   mutate(ScoreGroup = case_when(`2022_rq` &gt;= 80 ~ &quot;Excellent&quot;,
@@ -461,7 +466,19 @@ ranges: 80 &amp; above: Excellent | 75-79: Very Good | 70-74: Good |
                                 `2022_rq` &lt; 70 &amp;  `2022_rq` &gt;= 65 ~ &quot;Fair&quot;,
                                 `2022_rq` &lt; 65 &amp;  `2022_rq` &gt;= 55 ~ &quot;Poor&quot;,
                                 `2022_rq` &lt; 55 &amp;  `2022_rq` &gt;= 50 ~ &quot;Very Poor&quot;,
-                                `2022_rq` &lt; 50 ~ &quot;Critical&quot;))</code></pre>
+                                `2022_rq` &lt; 50 ~ &quot;Critical&quot;)) %&gt;% 
+  mutate(GoodBad = ifelse(ScoreGroup %in% c(&quot;Excellent&quot;, &quot;Very Good&quot;, &quot;Good&quot;), &quot;Good&quot;, &quot;Bad&quot;)) %&gt;% 
+  mutate(industryGroup = ifelse(industry %in% c(&quot;Retail&quot;, &quot;Tech&quot;, &quot;Food &amp; Beverage&quot;, &quot;Financial Services&quot;, &quot;Automotive&quot;), 
+                                industry, &quot;All Other&quot;)) %&gt;% 
+  select(industryGroup, ETHICS, CULTURE, CITIZENSHIP, GoodBad) %&gt;% 
+  mutate(GoodBad = factor(GoodBad))</code></pre>
+<pre class="r"><code>ratingsWide %&gt;% 
+  count(industry, sort = T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["industry"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Retail","2":"22"},{"1":"Tech","2":"15"},{"1":"Food & Beverage","2":"11"},{"1":"Financial Services","2":"8"},{"1":"Automotive","2":"7"},{"1":"Consumer Goods","2":"4"},{"1":"Ecommerce","2":"4"},{"1":"Media","2":"4"},{"1":"Telecom","2":"4"},{"1":"Energy","2":"3"},{"1":"Groceries","2":"3"},{"1":"Airline","2":"2"},{"1":"Food Delivery","2":"2"},{"1":"Healthcare","2":"2"},{"1":"Industrial","2":"2"},{"1":"Logistics","2":"2"},{"1":"Other","2":"2"},{"1":"Pharma","2":"2"},{"1":"Insurance","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="simple-prediction" class="section level1">
 <h1>Simple Prediction</h1>
@@ -470,15 +487,95 @@ ranges: 80 &amp; above: Excellent | 75-79: Very Good | 70-74: Good |
 <h2>Create Inital Test and Train Split</h2>
 <pre class="r"><code>library(tidymodels)
 
-song_split &lt;- initial_split(top50[,4:13], prop = 0.8)
+set.seed(1018)
 
-song_train &lt;- training(song_split)
-song_test  &lt;- testing(song_split)
+split &lt;- initial_split(compRatings, strata = GoodBad, prop = .6)
 
-song_val &lt;- validation_split(song_train, prop = 4/5)
-song_val$splits[[1]]</code></pre>
-<pre><code>## &lt;Training/Validation/Total&gt;
-## &lt;32/8/40&gt;</code></pre>
+train &lt;- training(split)
+test  &lt;- testing(split)
+
+# val &lt;- validation_split(train, prop = 4/5)
+# val$splits[[1]]</code></pre>
+</div>
+<div id="classification-model" class="section level2">
+<h2>Classification Model</h2>
+<pre class="r"><code># Make a model specifcation
+logreg_spec &lt;- logistic_reg() %&gt;% 
+  set_engine(&quot;glm&quot;) %&gt;% 
+  set_mode(&quot;classification&quot;)
+
+# Train a logistic regression model
+logreg_fit &lt;- logreg_spec %&gt;% 
+  fit(GoodBad ~ ., data = train)
+
+
+# Print the model object
+logreg_fit</code></pre>
+<pre><code>## parsnip model object
+## 
+## 
+## Call:  stats::glm(formula = GoodBad ~ ., family = stats::binomial, data = data)
+## 
+## Coefficients:
+##                     (Intercept)          industryGroupAutomotive  
+##                        -2443.37                          -196.24  
+## industryGroupFinancial Services     industryGroupFood &amp; Beverage  
+##                          -95.00                            73.18  
+##             industryGroupRetail                industryGroupTech  
+##                          103.79                            44.60  
+##                          ETHICS                          CULTURE  
+##                           38.08                            17.67  
+##                     CITIZENSHIP  
+##                          -21.39  
+## 
+## Degrees of Freedom: 58 Total (i.e. Null);  50 Residual
+## Null Deviance:       53.7 
+## Residual Deviance: 0.00000001918     AIC: 18</code></pre>
+</div>
+</div>
+<div id="assessing-precision-and-recall" class="section level1">
+<h1>Assessing Precision and Recall</h1>
+<pre class="r"><code># Make predictions then bind them to the test set
+results &lt;- test %&gt;% select(GoodBad) %&gt;% 
+  bind_cols(logreg_fit %&gt;% predict(new_data = test))</code></pre>
+<pre class="r"><code># Calculate accuracy: proportion of data predicted correctly
+accuracy(data = results, truth = GoodBad, estimate = .pred_class)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[".metric"],"name":[1],"type":["chr"],"align":["left"]},{"label":[".estimator"],"name":[2],"type":["chr"],"align":["left"]},{"label":[".estimate"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"accuracy","2":"binary","3":"0.9268293"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># Confusion matrix for prediction results
+conf_mat(data = results, truth = GoodBad, estimate = .pred_class)</code></pre>
+<pre><code>##           Truth
+## Prediction Bad Good
+##       Bad    6    1
+##       Good   2   32</code></pre>
+<ul>
+<li>Precision: TP/(TP + FP) defined as the proportion of predicted
+positives that are actually positive. Also called positive predictive
+value<br />
+</li>
+<li>Recall: TP/(TP + FN) defined as the proportion of positive results
+out of the number of samples which were actually positive. Also known as
+sensitivity.<br />
+</li>
+<li>Specificity: TN/(TN + FP) defined as the proportion of negative
+results out of the number of samples which were actually negative.<br />
+</li>
+<li>Accuracy: TP + TN/(TP + TN + FP + FN) The percentage of labels
+predicted accurately for a sample.<br />
+</li>
+<li>F Measure: A weighted average of the precision and recall, with best
+being 1 and worst being 0.</li>
+</ul>
+<pre class="r"><code># Combine metrics and evaluate them all at once
+eval_metrics &lt;- metric_set(ppv, recall, accuracy, f_meas)
+eval_metrics(data = results, truth = GoodBad, estimate = .pred_class)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[".metric"],"name":[1],"type":["chr"],"align":["left"]},{"label":[".estimator"],"name":[2],"type":["chr"],"align":["left"]},{"label":[".estimate"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"ppv","2":"binary","3":"0.8571429"},{"1":"recall","2":"binary","3":"0.7500000"},{"1":"accuracy","2":"binary","3":"0.9268293"},{"1":"f_meas","2":"binary","3":"0.8000000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 

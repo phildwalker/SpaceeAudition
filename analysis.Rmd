@@ -5,7 +5,7 @@ output:
   html_document:
     toc: true
     toc_float: true
-    code_folding: hide
+    code_folding: show
 editor_options: 
   chunk_output_type: console
 ---
@@ -80,7 +80,7 @@ With this analysis we are assuming that:
 # Overview of Data {.tabset .tabset-pills}
 Load the dataset and perform EDA and determine if any cleanup (data conversions, name changes, scaling, imputation of missing values, etc.) is needed. 
 
-## Load Data
+__Load Data__ 
  
 ```{r}
 top50 <- read_csv(here::here("inputs", "top50.csv")) %>% 
